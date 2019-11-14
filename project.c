@@ -7,7 +7,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 {
 	// cast to int so we can actually use it
 	int aluControl = (int) ALUControl;
-	
+
 	// check ALU control instructions
 	if (aluControl == 000) {
 		*ALUresult = A + B;
@@ -33,19 +33,19 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 			*ALUresult = 0;
 		}
 	}
-	
+
 	else if (aluControl == 100) {
 		*ALUresult = A & B;
 	}
-	
+
 	else if (aluControl == 101) {
 		*ALUresult = A | B;
 	}
-	
+
 	else if (aluControl == 110) {
 		*ALUresult = B << 16;
 	}
-	
+
 	else if (aluControl == 111) {
 		*ALUresult = !A;
 	}
@@ -58,26 +58,13 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	}
 }
 
-/* Unit test for ALU. */
-/* Don't run unless you're testing! */
-void testALU() {
-	unsigned int result = 0;
-	char control = 000;
-	char zeroes = '0';
-	ALU(0, 0, control, &result, &zeroes);
-
-	printf("Control: %d\n", control);
-	printf("Result: %d\n", result);
-	printf("Zeroes: %d\n", zeroes);
-}
-
 
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
 	// read instruction from Mem, write to instruction
-	*instruction = Mem[PC];
+	*instruction = Mem[PC >> 2];
 
 	// halt condition occurs if the instruction is in an invalid format, eg. not a MIPS "word"
 	if (PC % 4 == 0) {
@@ -92,7 +79,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-	// not exactly sure what is being asked. 
+	// not exactly sure what is being asked.
 
 	/*
 		unsigned instruction;
@@ -148,11 +135,11 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 {
 	// write memory
 	if ( (int) MemWrite == 1) {
-		*memdata = Mem[ALUresult];
+		*memdata = Mem[ALUresult >> 2];
 	}
 	// read memory
 	else if ( (int) MemRead == 1) {
-		Mem[ALUresult] = data2;
+		Mem[ALUresult >> 2] = data2;
 	}
 
 	// make sure ALUresult is valid
