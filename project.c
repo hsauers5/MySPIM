@@ -58,19 +58,6 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	}
 }
 
-/* Unit test for ALU. */
-/* Don't run unless you're testing! */
-void testALU() {
-	unsigned int result = 0;
-	char control = 000;
-	char zeroes = '0';
-	ALU(0, 0, control, &result, &zeroes);
-
-	printf("Control: %d\n", control);
-	printf("Result: %d\n", result);
-	printf("Zeroes: %d\n", zeroes);
-}
-
 
 /* instruction fetch */
 /* 10 Points */
