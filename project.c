@@ -92,7 +92,18 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
+	// not exactly sure what is being asked. 
+	/*
+		unsigned instruction;
 
+			unsigned op,	// instruction [31-26]
+			r1,	// instruction [25-21]
+			r2,	// instruction [20-16]
+			r3,	// instruction [15-11]
+			funct,	// instruction [5-0]
+			offset,	// instruction [15-0]
+			jsec;	// instruction [25-0]
+	*/
 }
 
 
@@ -134,7 +145,21 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
+	// write memory
+	if ( (int) MemWrite == 1) {
+		*memdata = Mem[ALUresult];
+	}
+	// read memory
+	else if ( (int) MemRead == 1) {
+		Mem[ALUresult] = data2;
+	}
 
+	// make sure ALUresult is valid
+	if (ALUresult % 4 != 0) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 
