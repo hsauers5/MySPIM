@@ -3,10 +3,66 @@
 
 /* ALU */
 /* 10 Points */
-void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
+void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zero)
 {
+	aluControl = (int) ALUControl;
+	
+	if aluControl == 000 {
+		*ALUresult = A + B;
+	}
+	else if aluControl = 001 {
+		*ALUresult = A - B;
+	}
+	else if aluControl = 010 {
+		if ((signed) A < (signed) B) {
+			*ALUresult = 1;
+		} else {
+			*ALUresult = 0;
+		}
+	}
+	else if aluControl = 011 {
+		if (A < B) {
+			*ALUresult = 1;
+		} else {
+			*ALUresult = 0;
+		}
+	}
+	
+	else if aluControl = 100 {
+		*ALUresult = A & B;
+	}
+	
+	else if aluControl = 101 {
+		*ALUresult = A | B;
+	}
+	
+	else if aluControl = 110 {
+		*ALUresult = B << 16;
+	}
+	
+	else if aluControl = 111 {
+		*ALUresult = !A;
+	}
 
+	if (*ALUresult == 0) {
+		*Zero = 1;
+	} else {
+		*Zero = 0;
+	}
 }
+
+/* Unit test for ALU. */
+void testALU() {
+	unsigned int result = 0;
+	char control = 000;
+	char zeroes = '0';
+	ALU(0, 0, control, &result, &zeroes);
+
+	printf("Control: %d\n", control);
+	printf("Result: %d\n", result);
+	printf("Zeroes: %d\n", zeroes);
+}
+
 
 /* instruction fetch */
 /* 10 Points */
