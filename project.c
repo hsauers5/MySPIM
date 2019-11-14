@@ -5,25 +5,28 @@
 /* 10 Points */
 void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zero)
 {
-	aluControl = (int) ALUControl;
+	// cast to int so we can actually use it
+	int aluControl = (int) ALUControl;
 	
-	if aluControl == 000 {
+	// check ALU control instructions
+	if (aluControl == 000) {
 		*ALUresult = A + B;
 	}
-	
-	else if aluControl = 001 {
+
+	else if (aluControl == 001) {
 		*ALUresult = A - B;
 	}
-	
-	else if aluControl = 010 {
-		if ((signed) A < (signed) B) {
+
+	// cast A and B to signed - not clear?
+	else if (aluControl == 010) {
+		if ((signed int) A < (signed int) B) {
 			*ALUresult = 1;
 		} else {
 			*ALUresult = 0;
 		}
 	}
-	
-	else if aluControl = 011 {
+
+	else if (aluControl == 011) {
 		if (A < B) {
 			*ALUresult = 1;
 		} else {
@@ -31,23 +34,23 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 		}
 	}
 	
-	else if aluControl = 100 {
+	else if (aluControl == 100) {
 		*ALUresult = A & B;
 	}
 	
-	else if aluControl = 101 {
+	else if (aluControl == 101) {
 		*ALUresult = A | B;
 	}
 	
-	else if aluControl = 110 {
+	else if (aluControl == 110) {
 		*ALUresult = B << 16;
 	}
 	
-	else if aluControl = 111 {
+	else if (aluControl == 111) {
 		*ALUresult = !A;
 	}
-	
-	// MIPS operations for zero
+
+	// check for zeroes
 	if (*ALUresult == 0) {
 		*Zero = 1;
 	} else {
