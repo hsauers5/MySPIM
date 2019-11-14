@@ -59,6 +59,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 }
 
 /* Unit test for ALU. */
+/* Don't run unless you're testing! */
 void testALU() {
 	unsigned int result = 0;
 	char control = 000;
@@ -75,7 +76,9 @@ void testALU() {
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
-	
+	*instruction = Mem[PC];
+	// when does a halt condition occur?
+	return 0;
 }
 
 
