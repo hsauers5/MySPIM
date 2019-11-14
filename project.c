@@ -93,6 +93,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
 	// not exactly sure what is being asked. 
+
 	/*
 		unsigned instruction;
 
@@ -167,7 +168,30 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 /* 10 Points */
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
+	// if not writing to register, then don't write to register
+	if (RegWrite != 1) {
+		return;
+	}
 
+	int result;
+	int address;
+
+	// determine data to write
+	if (MemtoReg == 0) {
+		result = ALUresult;
+	} else {
+		result = memdata;
+	}
+
+	// determine address
+	if (RegDst == 0) {
+		address = r2;
+	} else {
+		address = r3;
+	}
+
+	// write to Reg
+	Reg[address] = result;
 }
 
 /* PC update */
