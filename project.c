@@ -76,9 +76,15 @@ void testALU() {
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
+	// read instruction from Mem, write to instruction
 	*instruction = Mem[PC];
-	// when does a halt condition occur?
-	return 0;
+
+	// halt condition occurs if the instruction is in an invalid format, eg. not a MIPS "word"
+	if (PC % 4 == 0) {
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 
