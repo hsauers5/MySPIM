@@ -10,9 +10,11 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	if aluControl == 000 {
 		*ALUresult = A + B;
 	}
+	
 	else if aluControl = 001 {
 		*ALUresult = A - B;
 	}
+	
 	else if aluControl = 010 {
 		if ((signed) A < (signed) B) {
 			*ALUresult = 1;
@@ -20,6 +22,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 			*ALUresult = 0;
 		}
 	}
+	
 	else if aluControl = 011 {
 		if (A < B) {
 			*ALUresult = 1;
@@ -43,7 +46,8 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	else if aluControl = 111 {
 		*ALUresult = !A;
 	}
-
+	
+	// MIPS operations for zero
 	if (*ALUresult == 0) {
 		*Zero = 1;
 	} else {
@@ -68,7 +72,7 @@ void testALU() {
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
-
+	
 }
 
 
@@ -90,9 +94,13 @@ int instruction_decode(unsigned op,struct_controls *controls)
 
 /* Read Register */
 /* 5 Points */
-void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
+void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, unsigned *data2)
 {
+	// read r1 from Reg and write to data1
+	*data1 = Reg[r1];
 
+	// read r2 from Reg and write to data2
+	*data2 = Reg[r2];
 }
 
 
