@@ -114,28 +114,6 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
-	
-
-}
-
-//Completed by: 
-/* Read Register */
-/* 5 Points */
-void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, unsigned *data2)
-{
-	// read r1 from Reg and write to data1
-	*data1 = Reg[r1];
-
-	// read r2 from Reg and write to data2
-	*data2 = Reg[r2];
-}
-
-
-//Completed by: Jakob Germann
-/* Sign Extend */
-/* 10 Points */
-void sign_extend(unsigned offset,unsigned *extended_value)
-{
 	//Decode instructions based on signals from control unit
 	//Note: Case value depends on instruction opcode value
 	//Note: Opcode value represented in decimal for ease of use
@@ -254,6 +232,28 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 		default:
 			return 0;
 	}
+
+}
+
+//Completed by: 
+/* Read Register */
+/* 5 Points */
+void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, unsigned *data2)
+{
+	// read r1 from Reg and write to data1
+	*data1 = Reg[r1];
+
+	// read r2 from Reg and write to data2
+	*data2 = Reg[r2];
+}
+
+
+//Completed by: Jakob Germann
+/* Sign Extend */
+/* 10 Points */
+void sign_extend(unsigned offset,unsigned *extended_value)
+{
+	
 
 }
 
