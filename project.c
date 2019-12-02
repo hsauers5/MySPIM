@@ -5,28 +5,22 @@
 /* 10 Points */
 void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zero)
 {
-	// cast to int so we can actually use it
 	int aluControl = (int) ALUControl;
 	
-	// check ALU control instructions
-	if (aluControl == 000) {
+	if (aluControl == 0) {
 		*ALUresult = A + B;
 	}
-
-	else if (aluControl == 001) {
+	else if (aluControl == 1) {
 		*ALUresult = A - B;
 	}
-
-	// cast A and B to signed - not clear?
-	else if (aluControl == 010) {
+	else if (aluControl == 2) {
 		if ((signed int) A < (signed int) B) {
 			*ALUresult = 1;
 		} else {
 			*ALUresult = 0;
 		}
 	}
-
-	else if (aluControl == 011) {
+	else if (aluControl == 3) {
 		if (A < B) {
 			*ALUresult = 1;
 		} else {
@@ -34,23 +28,22 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 		}
 	}
 	
-	else if (aluControl == 100) {
+	else if (aluControl == 4) {
 		*ALUresult = A & B;
 	}
 	
-	else if (aluControl == 101) {
+	else if (aluControl == 5) {
 		*ALUresult = A | B;
 	}
 	
-	else if (aluControl == 110) {
+	else if (aluControl == 6) {
 		*ALUresult = B << 16;
 	}
 	
-	else if (aluControl == 111) {
+	else if (aluControl == 7) {
 		*ALUresult = !A;
 	}
 
-	// check for zeroes
 	if (*ALUresult == 0) {
 		*Zero = 1;
 	} else {
@@ -58,27 +51,12 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	}
 }
 
-//Completed by: 
-/* Unit test for ALU. */
-/* Don't run unless you're testing! */
-void testALU() {
-	unsigned int result = 0;
-	char control = 000;
-	char zeroes = '0';
-	ALU(0, 0, control, &result, &zeroes);
-
-	printf("Control: %d\n", control);
-	printf("Result: %d\n", result);
-	printf("Zeroes: %d\n", zeroes);
-}
-
-//Completed by: 
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
 	// read instruction from Mem, write to instruction
-	*instruction = Mem[PC];
+	*instruction = Mem[PC >> 2];
 
 	// halt condition occurs if the instruction is in an invalid format, eg. not a MIPS "word"
 	if (PC % 4 == 0) {
@@ -93,7 +71,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-	// not exactly sure what is being asked. 
+	// not exactly sure what is being asked.
 
 	/*
 		unsigned instruction;
@@ -262,7 +240,54 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
 {
+	int result;
+	unsigned int operand1 = data1;
+	unsigned int operand2;
 
+	// bad opcode
+	if (ALUOp < 0 || ALUOp > 7) {
+		return 1;
+	}
+	
+	// determine operands
+	if (ALUSrc == 0) {
+		operand2 = data2;
+	} else {
+		operand2 = extended_value;
+	}
+
+	int operation;
+	if (ALUOp == 2) {
+		// use funct to determine operation
+		switch(funct) {
+			case 32:
+				operation = 0;
+				break;
+			case 34:
+				operation = 1;
+				break;
+			case 36:
+				operation = 4;
+				break;
+			case 37:
+				operation = 5;
+				break;
+			case 42:
+				operation = 2;
+				break;
+			case 43:
+				operation = 3;
+				break;
+			default:
+				return 1;
+		}
+	}  else {
+		// determine via ALUOp
+		operation = ALUOp;
+	}
+	
+	ALU(operand1, operand2, operation, ALUresult, Zero);
+	return 0;
 }
 
 //Completed by: 
@@ -272,11 +297,11 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 {
 	// write memory
 	if ( (int) MemWrite == 1) {
-		*memdata = Mem[ALUresult];
+		*memdata = Mem[ALUresult >> 2];
 	}
 	// read memory
 	else if ( (int) MemRead == 1) {
-		Mem[ALUresult] = data2;
+		Mem[ALUresult >> 2] = data2;
 	}
 
 	// make sure ALUresult is valid
