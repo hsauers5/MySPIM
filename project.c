@@ -136,113 +136,113 @@ int instruction_decode(unsigned op,struct_controls *controls)
 	switch(op){
 		//R-type instructions
 		case 0:
-			*controls->RegDst = 1;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 7;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 0;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 1;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 7;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 0;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		case 8: //Add immediate instruction
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 0;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 0;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		case 10:
 			//Shift Left logical immediate
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 2;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 2;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		case 11:
 			//shift left logical immediate unsigned
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 3;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 3;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		case 2:
 			//Jump
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 0;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 0;
-			*controls->RegWrite = 0;
-			*controls->Jump = 1;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 0;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 0;
+			controls->RegWrite = 0;
+			controls->Jump = 1;
 			break;
 		
 		case 4:
 			//Branch Equal
-			*controls->RegDst = 2;
-			*controls->Branch = 1;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 2;
-			*controls->ALUOp = 1;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 0;
-			*controls->RegWrite = 0;
-			*controls->Jump = 0;
+			controls->RegDst = 2;
+			controls->Branch = 1;
+			controls->MemRead = 0;
+			controls->MemtoReg = 2;
+			controls->ALUOp = 1;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 0;
+			controls->RegWrite = 0;
+			controls->Jump = 0;
 			break;
 		
 		case 35:
 			//Load Word
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 1;
-			*controls->MemToReg = 1;
-			*controls->ALUOp = 0;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 1;
+			controls->MemtoReg = 1;
+			controls->ALUOp = 0;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		
 		case 43:
 			//Store Word
-			*controls->RegDst = 2;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 2;
-			*controls->ALUOp = 0;
-			*controls->MemWrite = 1;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 0;
-			*controls->Jump = 0;
+			controls->RegDst = 2;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 2;
+			controls->ALUOp = 0;
+			controls->MemWrite = 1;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 0;
+			controls->Jump = 0;
 			break;
 			
 		case 15:
 			//Load upper immediate
-			*controls->RegDst = 0;
-			*controls->Branch = 0;
-			*controls->MemRead = 0;
-			*controls->MemToReg = 0;
-			*controls->ALUOp = 6;
-			*controls->MemWrite = 0;
-			*controls->ALUSrc = 1;
-			*controls->RegWrite = 1;
-			*controls->Jump = 0;
+			controls->RegDst = 0;
+			controls->Branch = 0;
+			controls->MemRead = 0;
+			controls->MemtoReg = 0;
+			controls->ALUOp = 6;
+			controls->MemWrite = 0;
+			controls->ALUSrc = 1;
+			controls->RegWrite = 1;
+			controls->Jump = 0;
 			break;
 		
 		default:
