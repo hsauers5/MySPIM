@@ -1,6 +1,6 @@
 #include "spimcore.h"
 
-//Completed by: 
+//Completed by: Harry Sauers
 /* ALU */
 /* 10 Points */
 void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zero)
@@ -51,6 +51,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 	}
 }
 
+// Completed by Harry Sauers
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
@@ -66,23 +67,60 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 	}
 }
 
-//Completed by: 
+//Completed by: Samer Akileh
 /* instruction partition */
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-	// not exactly sure what is being asked.
+    // ALL given values are pointers. Dereference them using *var
+
+	// variables
+	unsigned bottom6BitsOnly = 0x0000003F; // 0x0000003F = 0011 1111 // a string of 6 1's to be ANDed with a with instruction partition that's supposed to be 6 bits long to isolate just those 6 bits.
+	// defines the size of an instruction with a string of 1's the size the partition's supposed to be
+
+    unsigned bottom5BitsOnly = 0x0000001F;
+
+    unsigned bottom16BitsOnly = 0x0000FFFF;
+
+    unsigned bottom26BitsOnly = 0x03FFFFFF;
+
+
+    // Instruct decode
+
+    *op     = (instruction >> 26) & bottom6BitsOnly; // UNESSESARY
+    /* First, shifts the instruction var down 26 bits to isolate bits from 26 onward [31-26]*/
+
+    *r1     = (instruction >> 21) & bottom5BitsOnly;
+    /*First, shifts the instruction var down 21 times to isolate bits from 21 onward, bits [31-21]
+    then truncates the last 5 bits bits using a logical AND with a string of 5 1's (in Hex) to get just bits [25-21]*/
+
+    *r2     = (instruction >> 16) & bottom5BitsOnly;
+    /*First, shifts the instruction var down 16 times to isolate bits from 16 onward, bits [31-16]
+    then truncates the last 5 bits bits using a logical AND with a string of 5 1's (in Hex) to get just bits [20-16]*/
+
+    *r3     = (instruction >> 11) & bottom5BitsOnly;
+    /*First, shifts the instruction var down 11 times to isolate bits from 11 onward, bits [31-11]
+    then truncates the least significant (bottom) 5 bits bits using a logical AND with a string of 5 1's (in Hex) to get just bits [25-11]*/
+
+    *funct  = instruction & bottom6BitsOnly;
+    /*First, no shift is needed as funct start at bit 0 [5-0]
+    then, the least significant (bottom) 5 bits are isolated/truncated using a logical AND with a string of 6 1's (in Hex) to get just bits [25-11]*/
+
+    *offset = instruction & bottom16BitsOnly;
+
+    *jsec   = instruction & bottom26BitsOnly;
+
 
 	/*
 		unsigned instruction;
-
-			unsigned op,	// instruction [31-26]
-			r1,	// instruction [25-21]
-			r2,	// instruction [20-16]
-			r3,	// instruction [15-11]
-			funct,	// instruction [5-0]
-			offset,	// instruction [15-0]
-			jsec;	// instruction [25-0]
+			unsigned
+			op,	    // instruction [31-26]    // 6 bits  // 0x0000003F = 0011 1111 (6 1's)
+			r1,	    // instruction [25-21]    // 5 bits  // 0x0000001F = 0001 1111 (5 1's)
+			r2,	    // instruction [20-16]    // 5 bits  // SAME AS ABOVE ^        (5 1's)
+			r3,	    // instruction [15-11]    // 5 bits  // SAME AS ABOVE ^        (5 1's)
+			funct,	// instruction [5-0]      // 6 bits  // 0x0000003F = 0011 1111 (6 1's)
+			offset,	// instruction [15-0]     // 16 bits // 0x0000FFFF = 1111 1111 1111 1111 (16 1's)
+			jsec;	// instruction [25-0]     // 26 bits // 0x03FFFFFF = 0000 0011 1111 1111 1111 1111 1111 1111 (26 1's)
 	*/
 }
 
@@ -213,7 +251,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 
 }
 
-//Completed by: 
+//Completed by: Harry Sauers
 /* Read Register */
 /* 5 Points */
 void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, unsigned *data2)
@@ -226,16 +264,37 @@ void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, uns
 }
 
 
-//Completed by:
+//Completed by: Samer Akileh
 /* Sign Extend */
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-	
+    // offset = the given val to be sign extended
+    // extended_value = a pointer to the final answer, the sign extended value.
+    // it is a pointer so be sure to dereference it as (*extended_value)
+
+
+    // logical AND = DESTROYS/clears out bits using 0's and preserves/truncates bits using 1's
+    // logical OR = ADDS
+
+    unsigned signBit = (offset >> 15); // & 0x00000001; // UNNESSESARY // checks to see the sign bit is 1 or 0 by shifting up 15 bits leaving us with just the most significant one
+
+    unsigned extend_posative = 0x0000FFFF; // 0000 0000 0000 0000 1111 1111 1111 1111 = 0x0000FFFF = top 16 filled with 0's for a positive sign bit to be extended into the first 16 bits using a logical AND to clear top 16 bits while maintaining the orginal offset val in the bottom 16 bits.
+    unsigned extend_negative = 0xFFFF0000; // 1111 1111 1111 1111 0000 0000 0000 0000 = 0xFFFF0000 = top 16 bits filled with 1's for a negative sign bit extended into the first 16 bits to create the final 32 bit number using a logical OR to add 1's
+
+    if(signBit == 0){ // Positive Sign Extend
+
+         *extended_value = offset & extend_posative;
+
+    }else if(signBit == 1){ // Negative Sign Extende
+
+        *extended_value = offset | extend_negative;
+
+    }
 
 }
 
-//Completed by: 
+//Completed by: Harry Sauers
 /* ALU operations */
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
@@ -290,7 +349,7 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 	return 0;
 }
 
-//Completed by: 
+//Completed by: Harry Sauers
 /* Read / Write Memory */
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
@@ -312,7 +371,7 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 	}
 }
 
-//Completed by: 
+//Completed by: Harry Sauers
 /* Write Register */
 /* 10 Points */
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
