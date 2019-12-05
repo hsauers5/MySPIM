@@ -57,7 +57,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned *ALUresult, char *Zer
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
 	// read instruction from Mem, write to instruction
-	*instruction = Mem[PC >> 2];
+	*instruction = Mem[(PC >> 2)];
 
 	// halt condition occurs if the instruction is in an invalid format, eg. not a MIPS "word"
 	if (PC % 4 == 0) {
@@ -316,8 +316,8 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 	}
 
 	int operation;
-	if (ALUOp == 2) {
-		// use funct to determine operation
+	if (ALUOp == 7) {
+		// r-type use funct to determine operation
 		switch(funct) {
 			case 32:
 				operation = 0;
@@ -354,20 +354,30 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
-	// write memory
-	if ( (int) MemWrite == 1) {
-		*memdata = Mem[ALUresult >> 2];
-	}
-	// read memory
-	else if ( (int) MemRead == 1) {
-		Mem[ALUresult >> 2] = data2;
-	}
+	if (ALUresult % 4 == 0) {
+		// write memory
+		if (MemWrite == 1) {
+			// *memdata = Mem[ALUresult >> 2];
+			Mem[ALUresult >> 2] = data2;
+		}
+		// read memory
+		else if (MemRead == 1) {
+			// Mem[ALUresult >> 2] = data2;
+			*memdata = Mem[ALUresult >> 2];
+		}
 
-	// make sure ALUresult is valid
-	if (ALUresult % 4 != 0) {
-		return 1;
+		// make sure ALUresult is valid
+		if (MemWrite == 1 || MemRead == 1) {
+			return 1;
+		} else {
+			return 0;
+		}
 	} else {
-		return 0;
+		if (MemWrite == 1 || MemRead == 1) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 }
 
@@ -377,29 +387,29 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
 	// if not writing to register, then don't write to register
-	if (RegWrite != 1) {
-		return;
+	if (RegWrite == 1) {
+
+		int result;
+		int address;
+
+		// determine data to write
+		if (MemtoReg == 0) {
+			result = ALUresult;
+		} else {
+			result = memdata;
+		}
+
+		// determine address
+		if (RegDst == 0) {
+			address = r2;
+		} else {
+			address = r3;
+		}
+
+		// write to Reg
+		Reg[address] = result;
+
 	}
-
-	int result;
-	int address;
-
-	// determine data to write
-	if (MemtoReg == 0) {
-		result = ALUresult;
-	} else {
-		result = memdata;
-	}
-
-	// determine address
-	if (RegDst == 0) {
-		address = r2;
-	} else {
-		address = r3;
-	}
-
-	// write to Reg
-	Reg[address] = result;
 }
 
 //Completed by: Jakob Germann
