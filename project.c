@@ -72,6 +72,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
+
     // ALL given values are pointers. Dereference them using *var
 
 	// variables
@@ -246,9 +247,10 @@ int instruction_decode(unsigned op,struct_controls *controls)
 			break;
 		
 		default:
-			return 0;
+			return 1;
 	}
 
+	return 0;
 }
 
 //Completed by: Harry Sauers
@@ -261,6 +263,7 @@ void read_register(unsigned r1, unsigned r2, unsigned *Reg, unsigned *data1, uns
 
 	// read r2 from Reg and write to data2
 	*data2 = Reg[r2];
+
 }
 
 
@@ -354,31 +357,24 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
-	if (ALUresult % 4 == 0) {
-		// write memory
-		if (MemWrite == 1) {
-			// *memdata = Mem[ALUresult >> 2];
-			Mem[ALUresult >> 2] = data2;
-		}
-		// read memory
-		else if (MemRead == 1) {
-			// Mem[ALUresult >> 2] = data2;
-			*memdata = Mem[ALUresult >> 2];
-		}
 
-		// make sure ALUresult is valid
-		if (MemWrite == 1 || MemRead == 1) {
-			return 1;
-		} else {
-			return 0;
-		}
-	} else {
-		if (MemWrite == 1 || MemRead == 1) {
-			return 0;
+	if (MemRead == 1) {
+		if (ALUresult % 4 == 0) {
+			*memdata = Mem[ALUresult >> 2];
 		} else {
 			return 1;
 		}
 	}
+
+	if (MemWrite == 1) {
+		if (ALUresult % 4 == 0) {
+			Mem[ALUresult >> 2] = data2;
+		} else {
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 //Completed by: Harry Sauers
@@ -421,10 +417,10 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
 	*PC += 4;
 	
 	//Shift sign extended value left 2
-	//extended_value = extended_value << 2;
+	// extended_value = extended_value << 2;
 	
 	//Add sign extend to updated PC counter
-	*PC = *PC + extended_value;
+	// *PC = *PC + extended_value;
 	
 	//Add sign extended value if branch & jump = 1
 	if (Branch == 1 && Zero == 1){
